@@ -20,7 +20,11 @@ fun main(args:Array<String>) {
         // define a custom command to get the current time
         command("getTime") {
             println("  the time is ${Date().asTimeString()}")
-            CONTINUE
+        }
+
+        // override loop control (continue by default) with break - loop will exit
+        command("die", loopControl = BREAK) {
+            println("I'm dead")
         }
 
         // optional: the "default" case gets executed when user input is not a command

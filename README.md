@@ -5,6 +5,7 @@ A lightweight, dependency-free library for building simple, declarative command-
 ### Example program
 
 ```kotlin
+
 fun main(args:Array<String>) {
     commandLoop {
         // optional: a custom welcome message
@@ -19,8 +20,12 @@ fun main(args:Array<String>) {
 
         // define a custom command to get the current time
         command("getTime") {
-            println("the time is ${Date().time}")
-            CONTINUE
+            println("  the time is ${Date().asTimeString()}")
+        }
+
+        // override loop control (continue by default) with break - loop will exit
+        command("die", loopControl = BREAK) {
+            println("I'm dead")
         }
 
         // optional: the "default" case gets executed when user input is not a command
@@ -37,6 +42,7 @@ fun main(args:Array<String>) {
 
 ```
 Hi! Enter a message and it will be echoed, or enter a command. Commands:
+  /die
   /exit
   /getTime
   /history

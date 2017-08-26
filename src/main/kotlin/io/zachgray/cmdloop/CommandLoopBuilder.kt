@@ -1,5 +1,7 @@
 package io.zachgray.cmdloop
 
+import io.zachgray.cmdloop.LoopControlOperator.*
+
 class CommandLoopBuilder {
 
     private lateinit var commandLoop: CommandLoop
@@ -10,11 +12,11 @@ class CommandLoopBuilder {
         // Default commands are defined here
         this["exit"] = {
             println("  bye! \uD83D\uDC4B")
-            LoopControlOperator.BREAK
+            BREAK
         }
         this["history"] = { cmdLoop ->
             cmdLoop.commandHistory.forEachIndexed { index,command -> println("$index $command") }
-            LoopControlOperator.CONTINUE
+            CONTINUE
         }
     }
 
@@ -37,8 +39,14 @@ class CommandLoopBuilder {
         commandPrefix = prefixClosure()
     }
 
-    fun command(key:String, action:CommandAction) {
-        commandList[key] = action
+    /**
+     * define a command
+     */
+    fun command(key:String, loopControl:LoopControlOperator = CONTINUE, action:(CommandLoop)->Unit) {
+        commandList[key] = { cmdLoop ->
+            action(cmdLoop)
+            loopControl
+        }
     }
 
     /**

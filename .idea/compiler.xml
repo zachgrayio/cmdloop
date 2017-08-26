@@ -4,6 +4,8 @@
     <bytecodeTargetLevel>
       <module name="cmdloop_main" target="1.8" />
       <module name="cmdloop_test" target="1.8" />
+      <module name="repos-cmdloop_main" target="1.8" />
+      <module name="repos-cmdloop_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

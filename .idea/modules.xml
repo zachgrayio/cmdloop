@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/cmdloop.iml" filepath="$PROJECT_DIR$/cmdloop.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/cmdloop_main.iml" filepath="$PROJECT_DIR$/.idea/modules/cmdloop_main.iml" group="cmdloop" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/cmdloop_test.iml" filepath="$PROJECT_DIR$/.idea/modules/cmdloop_test.iml" group="cmdloop" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/repos-cmdloop_main.iml" filepath="$PROJECT_DIR$/.idea/modules/repos-cmdloop_main.iml" group="cmdloop" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/repos-cmdloop_test.iml" filepath="$PROJECT_DIR$/.idea/modules/repos-cmdloop_test.iml" group="cmdloop" />
     </modules>
   </component>
 </project>

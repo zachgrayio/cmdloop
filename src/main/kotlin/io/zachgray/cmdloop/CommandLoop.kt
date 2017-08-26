@@ -3,6 +3,7 @@ package io.zachgray.cmdloop
 class CommandLoop(private val commandPrefix:String, private val commandDictionary: CommandDictionary, nonCommandInputHandler:((String?)->Unit)? = null, welcomeMessage:String) {
 
     private val commandList:List<String> = commandDictionary.keys.map { "$commandPrefix$it" }.sortedBy { it }
+    val commandHistory = mutableListOf<String>()
 
     init {
         println("$welcomeMessage Commands:")
@@ -31,7 +32,9 @@ class CommandLoop(private val commandPrefix:String, private val commandDictionar
     private fun executeCommand(input:String?): LoopControlOperator {
         if(input == null || !input.startsWith(commandPrefix)) return LoopControlOperator.NONE
 
-        val command = commandDictionary[input.substring(1)]
+        val commandKey = input.substring(1)
+        val command = commandDictionary[commandKey]
+
         return when (command) {
             null -> {
                 println("  Command not recognized. valid commands are:")
@@ -39,7 +42,8 @@ class CommandLoop(private val commandPrefix:String, private val commandDictionar
                 LoopControlOperator.CONTINUE
             }
             else -> {
-                command()
+                commandHistory.add("$commandPrefix$commandKey")
+                command(this)
             }
         }
     }

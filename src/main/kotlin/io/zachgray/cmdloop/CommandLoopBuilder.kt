@@ -12,6 +12,10 @@ class CommandLoopBuilder {
             println("  bye! \uD83D\uDC4B")
             LoopControlOperator.BREAK
         }
+        this["history"] = { cmdLoop ->
+            cmdLoop.commandHistory.forEachIndexed { index,command -> println("$index $command") }
+            LoopControlOperator.CONTINUE
+        }
     }
 
     fun build(): CommandLoop {

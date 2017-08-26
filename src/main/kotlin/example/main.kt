@@ -2,7 +2,6 @@ package example
 
 import io.zachgray.cmdloop.LoopControlOperator.*
 import io.zachgray.cmdloop.commandLoop
-import io.zachgray.ext.asDateString
 import io.zachgray.ext.asTimeString
 import java.util.*
 

@@ -25,7 +25,7 @@ fun main(args:Array<String>) {
         // optional: the "default" case gets executed when user input is not a command
         default {
             { input ->
-                input?.let { println("you said \"$input\"") }
+                input?.let { println("  you said \"$input\"") }
             }
         }
     }

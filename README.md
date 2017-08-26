@@ -26,11 +26,29 @@ fun main(args:Array<String>) {
         // optional: the "default" case gets executed when user input is not a command
         default {
             { input ->
-                input?.let { println("you said \"$input\"") }
+                input?.let { println("  you said \"$input\"") }
             }
         }
     }
 }
+```
+
+### Example program output
+
+```
+Hi! Enter a message and it will be echoed, or enter a command. Commands:
+  /exit
+  /getTime
+  /history
+> /getTime
+  the time is 1503734761550
+> /history
+0 /getTime
+1 /history
+> hello
+  you said "hello"
+> /exit
+  bye! 👋
 ```
 
 ### Default Commands

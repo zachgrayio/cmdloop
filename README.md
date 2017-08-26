@@ -14,7 +14,7 @@ fun main(args:Array<String>) {
 
         // define the command prefix
         commandPrefix {
-            "/" //example: /exit, /getTime
+            "/" //example: /exit, /time
         }
 
         // define a custom command to get the current time

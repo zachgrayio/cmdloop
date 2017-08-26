@@ -2,14 +2,20 @@ group = 'io.zachgray.cmdloop'
 
 buildscript {
     ext.kotlin_version = '1.1.4'
-    repositories { mavenCentral() }
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'net.researchgate:gradle-release:2.4.0'
     }
 }
-
 apply plugin: 'kotlin'
 apply plugin: 'java'
+apply plugin: 'net.researchgate.release'
 
 sourceSets {
     main.kotlin.srcDirs += 'src/main/kotlin'

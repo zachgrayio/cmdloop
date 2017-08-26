@@ -5,7 +5,6 @@ A lightweight, dependency-free library for building simple, declarative command-
 ### Example program
 
 ```kotlin
-
 fun main(args:Array<String>) {
     commandLoop {
         // optional: a custom welcome message
@@ -19,13 +18,18 @@ fun main(args:Array<String>) {
         }
 
         // define a custom command to get the current time
-        command("getTime") {
+        command("time") {
             println("  the time is ${Date().asTimeString()}")
         }
 
         // override loop control (continue by default) with break - loop will exit
         command("die", loopControl = BREAK) {
             println("I'm dead")
+        }
+
+        // print any args that were passed to the program on launch
+        command("args") {
+            args.forEachIndexed { i, arg -> println("arg[$i]=$arg") }
         }
 
         // optional: the "default" case gets executed when user input is not a command

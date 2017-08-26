@@ -46,17 +46,20 @@ fun main(args:Array<String>) {
 
 ```
 Hi! Enter a message and it will be echoed, or enter a command. Commands:
+  /args
   /die
   /exit
   /getTime
   /history
 > /getTime
-  the time is 1503734761550
+  the time is 02:39
 > /history
 0 /getTime
 1 /history
 > hello
   you said "hello"
+> /args
+  arg[0]=argh
 > /exit
   bye! 👋
 ```

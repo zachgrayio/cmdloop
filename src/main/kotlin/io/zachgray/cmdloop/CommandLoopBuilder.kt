@@ -52,8 +52,8 @@ class CommandLoopBuilder {
     /**
      * default
      */
-    fun default(afterCommandClosure: () -> ((String?)->Unit)?) {
-        nonCommandInputHandler = afterCommandClosure()
+    fun default(nonCommandInputHandlerClosure: () -> ((String?)->Unit)?) {
+        nonCommandInputHandler = nonCommandInputHandlerClosure()
     }
 }
 

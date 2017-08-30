@@ -1,4 +1,4 @@
-package io.zachgray.ext
+package io.zachgray.cmdloop.ext
 
 import java.text.DateFormat
 import java.text.ParsePosition

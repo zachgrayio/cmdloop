@@ -2,7 +2,7 @@ package example
 
 import io.zachgray.cmdloop.LoopControlOperator.*
 import io.zachgray.cmdloop.commandLoop
-import io.zachgray.ext.asTimeString
+import io.zachgray.cmdloop.ext.asTimeString
 import java.util.*
 
 fun main(args:Array<String>) {

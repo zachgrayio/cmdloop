@@ -15,25 +15,19 @@ object RPN {
      */
     fun evaluate(rpnExpression: String): Double {
         val stack = LinkedList<Double>()
-        fun operands() = Pair(stack.pop(), stack.pop()) // throws if expression is invalid
         val tokens = clean(rpnExpression).split("\\s".toRegex()).dropLastWhile { it.isEmpty() }
+        fun operands() = Pair(stack.pop(), stack.pop())
 
         tokens.forEach { token ->
-            var tokenNum: Double? = null
-            try { tokenNum = token.toDouble() } catch (e: NumberFormatException) {}
-
-            if (tokenNum != null) stack.push(tokenNum)
-            else {
-                val operands = operands() // throws if expression is invalid
-                stack.push(when (token) {
-                    "*" -> operands.first * operands.second
-                    "/" -> operands.first / operands.second
-                    "-" -> operands.first - operands.second
-                    "+" -> operands.first + operands.second
-                    "^" -> Math.pow(operands.first, operands.second)
-                    else -> throw Error("Invalid expression")
-                })
-            }
+            token.toDoubleOrNull().run { this?.let { return@forEach stack.push(this) } }
+            stack.push(when (token) {
+                "*" -> operands().let { it.first * it.second }
+                "/" -> operands().let { it.first / it.second }
+                "-" -> operands().let { it.first - it.second }
+                "+" -> operands().let { it.first + it.second }
+                "^" -> operands().let { Math.pow(it.first, it.second) }
+                else -> throw Error("Invalid expression")
+            })
         }
         return stack.pop()
     }

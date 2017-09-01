@@ -32,7 +32,7 @@ sealed class Operator(val stringRepresentation:String, val precedence:Int) {
             times.stringRepresentation -> times
             div.stringRepresentation -> div
             pow.stringRepresentation -> pow
-            else -> throw Error("Invalid expression or unsupported operator")
+            else -> null
         }
     }
 }
@@ -54,10 +54,8 @@ object RPN {
         val tokens = clean(rpnExpression).split("\\s".toRegex()).dropLastWhile { it.isEmpty() }
         tokens.forEach { token ->
             token.toDoubleOrNull().run { this?.let { return@forEach stack.push(this) } }
-            Operator
-                .fromString(token)
-                .operate(stack.pop(), stack.pop())
-                .run { stack.push(this) }
+            val operator = Operator.fromString(token) ?: throw Error("Invalid expression or unsupported operator")
+            operator.operate(stack.pop(), stack.pop()).run { stack.push(this) }
         }
         return stack.pop()
     }

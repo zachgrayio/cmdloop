@@ -1,6 +1,11 @@
 package io.zachgray.cmdloop
 
-class CommandLoop(private val commandPrefix:String, private val commandDictionary: CommandDictionary, nonCommandInputHandler:((String?)->Unit)? = null, welcomeMessage:String) {
+class CommandLoop(
+    private val commandPrefix:String,
+    private val commandDictionary: CommandDictionary,
+    nonCommandInputHandler:((String?)->Unit)? = null,
+    welcomeMessage:String,
+    errorHandler:((Error)->Unit)?) {
 
     private val commandList:List<String> = commandDictionary.keys.map { "$commandPrefix$it" }.sortedBy { it }
     val commandHistory = mutableListOf<String>()
@@ -15,13 +20,18 @@ class CommandLoop(private val commandPrefix:String, private val commandDictionar
             print("> ")
             val input = readLine()
             // execute command
-            when(executeCommand(input)) {
-                LoopControlOperator.BREAK -> break@repl
-                LoopControlOperator.CONTINUE -> continue@repl
-                LoopControlOperator.NONE -> Unit
+            try {
+                when(executeCommand(input)) {
+                    LoopControlOperator.BREAK -> break@repl
+                    LoopControlOperator.CONTINUE -> continue@repl
+                    LoopControlOperator.NONE -> Unit
+                }
+                // execute default if it exists
+                nonCommandInputHandler?.let { it(input) }
+            } catch(e:Error) {
+                if (errorHandler == null) throw e
+                errorHandler(e)
             }
-            // execute default if it exists
-            nonCommandInputHandler?.let { it(input) }
         }
     }
 

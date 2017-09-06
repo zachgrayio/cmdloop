@@ -8,6 +8,7 @@ class CommandLoopBuilder {
     private var welcomeMessage: String? = null
     private var commandPrefix: String = ""
     private var nonCommandInputHandler: ((String?)->Unit)? = null
+    private var errorHandler: ((Error)->Unit)? = null
     private var commandList = CommandDictionary().apply {
         // Default commands are defined here
         this["exit"] = {
@@ -21,7 +22,7 @@ class CommandLoopBuilder {
     }
 
     fun build(): CommandLoop {
-        commandLoop = CommandLoop(commandPrefix, commandList, nonCommandInputHandler, welcomeMessage ?: "Welcome.")
+        commandLoop = CommandLoop(commandPrefix, commandList, nonCommandInputHandler, welcomeMessage ?: "Welcome.", errorHandler)
         return commandLoop
     }
 
@@ -40,7 +41,7 @@ class CommandLoopBuilder {
     }
 
     /**
-     * define a command
+     * shorthand to define a command
      */
     fun command(key:String, loopControl:LoopControlOperator = CONTINUE, action:(CommandLoop)->Unit) {
         commandList[key] = { cmdLoop ->
@@ -54,6 +55,13 @@ class CommandLoopBuilder {
      */
     fun default(nonCommandInputHandlerClosure: () -> ((String?)->Unit)?) {
         nonCommandInputHandler = nonCommandInputHandlerClosure()
+    }
+
+    /**
+     * catch
+     */
+    fun catch(errorHandlerClosure: () -> ((Error)->Unit)?) {
+        errorHandler = errorHandlerClosure()
     }
 }
 

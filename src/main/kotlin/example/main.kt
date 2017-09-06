@@ -35,13 +35,14 @@ fun main(args:Array<String>) {
         // optional: the "default" case gets executed when user input is not a command
         default {
             { input ->
-                input?.let {
-                    try {
-                        println("  ${RPN.evaluate(RPN.from(it))}")
-                    } catch (e:Error) {
-                        println("  invalid expression, please try again.")
-                    }
-                }
+                input?.let { println("  ${RPN.evaluate(RPN.from(it))}") }
+            }
+        }
+
+        // optional: catch error
+        catch {
+            { e ->
+                println("  invalid expression, please try again.")
             }
         }
     }

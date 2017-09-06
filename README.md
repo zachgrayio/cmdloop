@@ -32,10 +32,16 @@ fun main(args:Array<String>) {
             args.forEachIndexed { i, arg -> println("arg[$i]=$arg") }
         }
 
-        // optional: the "default" case gets executed when user input is not a command
+        // optional: the "default" case gets executed when user input is not a command. in this case, the mathematical
+        // expression is evaluated and results printed.
         default {
             { input ->
-                input?.let { println("  ${RPN.evaluate(RPN.from(it))}") }
+                input?.let {
+                    val expression = it.toRPNExpression()
+                    println("  numbers:   ${expression.numbers}")
+                    println("  operators: ${expression.operators}")
+                    println("  solution:  ${expression.evaluate()}")
+                }
             }
         }
 

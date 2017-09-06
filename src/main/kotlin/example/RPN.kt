@@ -87,38 +87,36 @@ object RPN {
  * infix:   3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3
  * postfix: 3 4 2 * 1 5 - 2 3 ^ ^ / +
  */
-fun String.toRPN(): String {
-    // tokenize string
-    val tokens =
-        // tokenize - first pass: split on spaces
-        this.split(Regex("\\s"))
-            .filterNot { it.isEmpty() }
-            // tokenize - second pass: split numbers and non numbers
-            .flatMap { it ->  it.split(Regex("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)")) }
+fun String.toRPN(): String = this
+    // tokenize - first pass
+    .split(Regex("\\s"))
+    .filterNot { it.isEmpty() }
+    // tokenize - second pass: split numbers and non numbers
+    .flatMap { it ->  it.split(Regex("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)")) }
     // process tokens
-    val output = StringBuilder()
-    val stack = Stack<String>()
-    fun popToOutput() { output.append(stack.pop()).append(' ') }
-    tokens.forEach { token ->
-        val operator = Operator.fromString(token)
-        when {
-            operator != null -> {
-                while (!stack.isEmpty() && Operator.fromString(stack.peek()) != null) {
-                    val operator2 = Operator.fromString(stack.peek())!!
-                    val c = operator.compareTo(operator2)
-                    if(c < 0 || !operator.isRightAssociative && c <= 0) popToOutput()
-                    else break
+    .let { tokens ->
+        val output = StringBuilder()
+        val stack = Stack<String>()
+        fun popToOutput() { output.append(stack.pop()).append(' ') }
+        tokens.forEach { token ->
+            val operator = Operator.fromString(token)
+            when {
+                operator != null -> {
+                    while (!stack.isEmpty() && Operator.fromString(stack.peek()) != null) {
+                        val operator2 = Operator.fromString(stack.peek())!!
+                        if(operator < operator2 || !operator.isRightAssociative && operator <= operator2) popToOutput()
+                        else break
+                    }
+                    stack.push(token)
                 }
-                stack.push(token)
+                token == "(" -> stack.push(token)
+                token == ")" -> {
+                    while (stack.peek() != "(") popToOutput()
+                    stack.pop()
+                }
+                else -> output.append(token).append(' ')
             }
-            token == "(" -> stack.push(token)
-            token == ")" -> {
-                while (stack.peek() != "(") popToOutput()
-                stack.pop()
-            }
-            else -> output.append(token).append(' ')
         }
+        while (!stack.isEmpty()) popToOutput()
+        return output.toString()
     }
-    while (!stack.isEmpty()) popToOutput()
-    return output.toString()
-}

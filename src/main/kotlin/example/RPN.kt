@@ -59,21 +59,27 @@ object RPN {
     /**
      * Evaluate a RPN expression string and return the result
      */
-    fun evaluate(rpnExpression: String): Double {
-        val stack = LinkedList<Double>()
-        val tokens = clean(rpnExpression).split("\\s".toRegex()).dropLastWhile { it.isEmpty() }
-        tokens.forEach { token ->
-            token.toDoubleOrNull().run { this?.let { return@forEach stack.push(this) } }
-            (Operator.fromString(token) ?: throw Error("Invalid expression or unsupported operator"))
-                .operate(stack.pop(), stack.pop())
-                .run(stack::push)
-        }
-        return stack.pop()
-    }
-
-    private fun clean(expr: String): String {
-        return expr.replace("[^\\^*+\\-\\d/\\s]".toRegex(), "")
-    }
+    fun evaluate(rpnExpression: String): Double = LinkedList<Double>().apply {
+        val stack = this
+        rpnExpression
+            // clean
+            .replace("[^\\^*+\\-\\d/\\s]".toRegex(), "")
+            // split
+            .split("\\s".toRegex())
+            // drop empties
+            .dropLastWhile { it.isEmpty() }
+            // process tokens
+            .forEach { token ->
+                // push numbers onto stack
+                token.toDoubleOrNull().run { this?.let { return@forEach stack.push(this) } }
+                // NaN, lookup operator
+                (Operator.fromString(token) ?: throw Error("Invalid expression or unsupported operator"))
+                    // apply operator to previous 2 values on stack
+                    .operate(stack.pop(), stack.pop())
+                    // push result to stack
+                    .run(stack::push)
+            }
+    }.pop()
 }
 
 /**

@@ -9,7 +9,7 @@ fun main(args:Array<String>) {
     commandLoop {
         // optional: a custom welcome message
         welcomeMessage {
-            "Hi! Enter a message and it will be echoed, or enter a command."
+            "Hi! Enter a mathematical expression to be evaluated, or enter a command."
         }
 
         // define the command prefix
@@ -35,7 +35,14 @@ fun main(args:Array<String>) {
         // optional: the "default" case gets executed when user input is not a command
         default {
             { input ->
-                input?.let { println("  you said \"$input\"") }
+                input?.let { println("  ${RPN.evaluate(RPN.from(it))}") }
+            }
+        }
+
+        // optional: catch error
+        catch {
+            { e ->
+                println("  invalid expression, please try again.")
             }
         }
     }

@@ -1,27 +1,29 @@
 package example
 
 import java.util.*
+import java.util.LinkedList
 
-sealed class Operator(val stringRepresentation:String, val precedence:Int) {
+
+sealed class Operator(val stringRepresentation:String, val precedence:Int, val isRightAssociative:Boolean) {
     abstract fun operate(right:Double, left:Double):Double
 
-    object plus : Operator(stringRepresentation = "+", precedence = 0) {
+    object plus : Operator(stringRepresentation = "+", precedence = 0, isRightAssociative = false) {
         override fun operate(right: Double, left: Double) = left.plus(right)
     }
 
-    object minus : Operator(stringRepresentation = "-", precedence = 0) {
+    object minus : Operator(stringRepresentation = "-", precedence = 0, isRightAssociative = false) {
         override fun operate(right: Double, left: Double) = left.minus(right)
     }
 
-    object times : Operator(stringRepresentation = "*", precedence = 1) {
+    object times : Operator(stringRepresentation = "*", precedence = 1, isRightAssociative = false) {
         override fun operate(right: Double, left: Double) = left.times(right)
     }
 
-    object div : Operator(stringRepresentation = "/", precedence = 1) {
+    object div : Operator(stringRepresentation = "/", precedence = 1, isRightAssociative = false) {
         override fun operate(right: Double, left: Double) = left.div(right)
     }
 
-    object pow : Operator(stringRepresentation = "^", precedence = 2) {
+    object pow : Operator(stringRepresentation = "^", precedence = 2, isRightAssociative = true) {
         override fun operate(right: Double, left: Double) = Math.pow(left, right)
     }
 
@@ -34,6 +36,14 @@ sealed class Operator(val stringRepresentation:String, val precedence:Int) {
             pow.stringRepresentation -> pow
             else -> null
         }
+    }
+}
+
+operator fun Operator.compareTo(other:Operator):Int {
+    return when {
+        this.precedence > other.precedence -> 1
+        this.precedence == other.precedence -> 0
+        else -> -1
     }
 }
 
@@ -72,8 +82,6 @@ object RPN {
  * postfix: 3 4 2 * 1 5 - 2 3 ^ ^ / +
  */
 fun String.toRPN(): String {
-    // supported mathematical operators, ordered by precedence
-    val operators = listOf("+", "-", "/", "*", "^")
     // tokenize string
     val tokens =
         // tokenize - first pass: split on spaces
@@ -81,36 +89,30 @@ fun String.toRPN(): String {
             .filterNot { it.isEmpty() }
             // tokenize - second pass: split numbers and non numbers
             .flatMap { it ->  it.split(Regex("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)")) }
-    // --
-    // process tokens. todo: find a more idiomatic way to do this with less mutable state?
-    // initial state
-    val stack = Stack<Int>()
-    val builder = StringBuilder()
-    fun popAndAppendLastOperator() = builder.append(operators[stack.pop()]).append(' ')
-    // process each token
-    tokens
-        .forEach { token ->
-            val index = operators.indexOf(token)
-            if (index != -1) {
-                if (stack.isEmpty()) stack.push(index)
-                else {
-                    // to find precedence, take the index of the token in the ops list and divide by 2 (rounding down). this will give us: 0, 0, 1, 1, 2
-                    while (!stack.isEmpty()) {
-                        val prec2 = stack.peek() / 2
-                        val prec1 = index / 2
-                        if (prec2 > prec1 || (prec2 == prec1 && token != "^")) popAndAppendLastOperator()
-                        else break
-                    }
-                    stack.push(index)
+    // process tokens
+    val output = StringBuilder()
+    val stack = Stack<String>()
+    fun popToOutput() { output.append(stack.pop()).append(' ') }
+    tokens.forEach { token ->
+        val operator = Operator.fromString(token)
+        when {
+            operator != null -> {
+                while (!stack.isEmpty() && Operator.fromString(stack.peek()) != null) {
+                    val operator2 = Operator.fromString(stack.peek())!!
+                    val c = operator.compareTo(operator2)
+                    if(c < 0 || !operator.isRightAssociative && c <= 0) popToOutput()
+                    else break
                 }
-            } else if (token == "(") stack.push(-2) // -2 stands for '('
-            else if (token == ")") {
-                // until '(' on stack, pop operators.
-                while (stack.peek() != -2) popAndAppendLastOperator()
+                stack.push(token)
+            }
+            token == "(" -> stack.push(token)
+            token == ")" -> {
+                while (stack.peek() != "(") popToOutput()
                 stack.pop()
             }
-            else builder.append(token).append(' ')
+            else -> output.append(token).append(' ')
         }
-    while (!stack.isEmpty()) popAndAppendLastOperator()
-    return builder.toString()
+    }
+    while (!stack.isEmpty()) popToOutput()
+    return output.toString()
 }

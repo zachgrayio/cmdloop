@@ -3,26 +3,26 @@ package example
 import java.util.*
 
 sealed class Operator(val stringRepresentation:String, val precedence:Int) {
-    abstract fun operate(left:Double, right:Double):Double
+    abstract fun operate(right:Double, left:Double):Double
 
     object plus : Operator(stringRepresentation = "+", precedence = 0) {
-        override fun operate(left: Double, right: Double) = left.plus(right)
+        override fun operate(right: Double, left: Double) = left.plus(right)
     }
 
     object minus : Operator(stringRepresentation = "-", precedence = 0) {
-        override fun operate(left: Double, right: Double) = left.minus(right)
+        override fun operate(right: Double, left: Double) = left.minus(right)
     }
 
     object times : Operator(stringRepresentation = "*", precedence = 1) {
-        override fun operate(left: Double, right: Double) = left.times(right)
+        override fun operate(right: Double, left: Double) = left.times(right)
     }
 
     object div : Operator(stringRepresentation = "/", precedence = 1) {
-        override fun operate(left: Double, right: Double) = left.div(right)
+        override fun operate(right: Double, left: Double) = left.div(right)
     }
 
-    object pow : Operator(stringRepresentation = "/", precedence = 2) {
-        override fun operate(left: Double, right: Double) = Math.pow(left, right)
+    object pow : Operator(stringRepresentation = "^", precedence = 2) {
+        override fun operate(right: Double, left: Double) = Math.pow(left, right)
     }
 
     companion object {
@@ -68,6 +68,8 @@ object RPN {
 
 /**
  * Converts a mathematical expression from infix to reverse polish notation
+ * infix:   3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3
+ * postfix: 3 4 2 * 1 5 - 2 3 ^ ^ / +
  */
 fun String.toRPN(): String {
     // supported mathematical operators, ordered by precedence

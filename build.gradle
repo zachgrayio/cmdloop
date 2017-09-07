@@ -35,11 +35,11 @@ task wrapper(type: Wrapper) {
 }
 
 bintray {
-    user = 'zachgray'
+    user = 'zachgrayio'
     key = '4d314dfb4776db5748542713148afe6d501b2e76'
     configurations = ['archives']
     pkg {
-        repo = 'generic'
+        repo = 'cmdloop'
         name = 'cmdloop'
         userOrg = 'zachgray'
         licenses = ['Apache-2.0']

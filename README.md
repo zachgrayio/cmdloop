@@ -2,6 +2,25 @@
 
 A lightweight, dependency-free library for building simple, declarative command-line programs in Kotlin
 
+### Binaries
+
+First add the bintray repo:
+
+```groovy
+repositories {
+    maven {
+        url  "https://zachgray.bintray.com/cmdloop"
+    }
+}
+```
+then the binary dependency can be added:
+
+```groovy
+dependencies {
+    compile "io.zachgray.cmdloop:cmdloop:0.1.4"
+}
+```
+
 ### Example program
 
 ```kotlin
@@ -92,5 +111,5 @@ command("exit") {
 }
 ```
 
-### Build
+### Build this repository
 `./gradlew assemble` 

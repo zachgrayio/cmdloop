@@ -40,7 +40,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = 'cmdloop'
-        name = 'cmdloop'
+        name = 'cmdloop-core'
         userOrg = 'zachgray'
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/zachgrayio/cmdloop.git'

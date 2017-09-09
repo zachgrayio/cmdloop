@@ -8,7 +8,7 @@ class CommandLoopBuilder {
     private var welcomeMessage: String? = null
     private var commandPrefix: String = ""
     private var nonCommandInputHandler: ((String?)->Unit)? = null
-    private var errorHandler: ((Error)->Unit)? = null
+    private var errorHandler: ((Throwable)->Unit)? = null
     private var commandList = CommandDictionary().apply {
         // Default commands are defined here
         this["exit"] = {
@@ -60,7 +60,7 @@ class CommandLoopBuilder {
     /**
      * catch
      */
-    fun catch(errorHandlerClosure: () -> ((Error)->Unit)?) {
+    fun catch(errorHandlerClosure: () -> ((Throwable)->Unit)?) {
         errorHandler = errorHandlerClosure()
     }
 }

@@ -5,7 +5,7 @@ class CommandLoop(
     private val commandDictionary: CommandDictionary,
     nonCommandInputHandler:((String?)->Unit)? = null,
     welcomeMessage:String,
-    errorHandler:((Error)->Unit)?) {
+    errorHandler:((Throwable)->Unit)?) {
 
     private val commandList:List<String> = commandDictionary.keys.map { "$commandPrefix$it" }.sortedBy { it }
     val commandHistory = mutableListOf<String>()
@@ -28,9 +28,9 @@ class CommandLoop(
                 }
                 // execute default if it exists
                 nonCommandInputHandler?.let { it(input) }
-            } catch(e:Error) {
-                if (errorHandler == null) throw e
-                errorHandler(e)
+            } catch(t:Throwable) {
+                if (errorHandler == null) throw t
+                errorHandler(t)
             }
         }
     }

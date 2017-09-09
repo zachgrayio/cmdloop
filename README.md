@@ -1,6 +1,10 @@
 # cmdloop
 
-A lightweight, dependency-free library for building simple, declarative command-line programs in Kotlin
+A lightweight, dependency-free library for building simple, declarative command-line programs in Kotlin.
+
+### Example program
+
+Here's a CLI calculator implemented on top of cmdloop: [Kalk](https://github.com/zachgrayio/kalk).
 
 ### Binaries
 
@@ -105,9 +109,8 @@ Out of the box, the following commands are included:
 To provide a custom exit function, you could do the following:
 
 ```kotlin
-command("exit") {
+command("exit", loopControl = BREAK) {
     println("custom exit!")
-    BREAK
 }
 ```
 

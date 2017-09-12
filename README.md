@@ -21,7 +21,7 @@ then the binary dependency can be added:
 
 ```groovy
 dependencies {
-    compile "io.zachgray.cmdloop:cmdloop:0.1.4"
+    compile "io.zachgray.cmdloop:cmdloop:2.0.2"
 }
 ```
 

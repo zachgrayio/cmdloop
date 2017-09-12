@@ -11,11 +11,11 @@ class CommandLoopBuilder {
     private var errorHandler: ((Throwable)->Unit)? = null
     private var commandList = CommandDictionary().apply {
         // Default commands are defined here
-        this["exit"] = {
+        this["exit"] = { _, _ ->
             println("  bye! \uD83D\uDC4B")
             BREAK
         }
-        this["history"] = { cmdLoop ->
+        this["history"] = { _, cmdLoop ->
             cmdLoop.commandHistory.forEachIndexed { index,command -> println("$index $command") }
             CONTINUE
         }
@@ -43,9 +43,9 @@ class CommandLoopBuilder {
     /**
      * shorthand to define a command
      */
-    fun command(key:String, loopControl:LoopControlOperator = CONTINUE, action:(CommandLoop)->Unit) {
-        commandList[key] = { cmdLoop ->
-            action(cmdLoop)
+    fun command(keyAndParams:String, loopControl:LoopControlOperator = CONTINUE, action:(List<String>, CommandLoop)->Unit) {
+        commandList[keyAndParams.split("\\s".toRegex()).first()] = { args, cmdLoop ->
+            action(args, cmdLoop)
             loopControl
         }
     }

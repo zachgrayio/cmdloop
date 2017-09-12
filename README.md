@@ -41,18 +41,23 @@ fun main(args:Array<String>) {
         }
 
         // define a custom command to get the current time
-        command("time") {
+        command("time") { _, _ ->
             println("  the time is ${Date().asTimeString()}")
         }
 
         // override loop control (continue by default) with break - loop will exit
-        command("die", loopControl = BREAK) {
+        command("die", loopControl = BREAK) { _, _ ->
             println("I'm dead")
         }
 
         // print any args that were passed to the program on launch
-        command("args") {
+        command("args") { _, _ ->
             args.forEachIndexed { i, arg -> println("arg[$i]=$arg") }
+        }
+
+        // print command params
+        command("printParams") { params, _ ->
+            println("you included params: $params")
         }
 
         // optional: the "default" case gets executed when user input is not a command. in this case, the mathematical
@@ -70,7 +75,7 @@ fun main(args:Array<String>) {
 
         // optional: catch error
         catch {
-            { e ->
+            { _ ->
                 println("  invalid expression, please try again.")
             }
         }

@@ -42,7 +42,9 @@ class CommandLoop(
     private fun executeCommand(input:String?): LoopControlOperator {
         if(input == null || !input.startsWith(commandPrefix)) return LoopControlOperator.NONE
 
-        val commandKey = input.substring(1)
+        val commandAndArgs = input.substring(1).split("\\s".toRegex())
+        val commandKey = commandAndArgs[0]
+        val commandArgs = if(commandAndArgs.size > 1) commandAndArgs.takeLast(commandAndArgs.size - 1) else listOf()
         val command = commandDictionary[commandKey]
 
         return when (command) {
@@ -53,7 +55,7 @@ class CommandLoop(
             }
             else -> {
                 commandHistory.add("$commandPrefix$commandKey")
-                command(this)
+                command(commandArgs, this)
             }
         }
     }

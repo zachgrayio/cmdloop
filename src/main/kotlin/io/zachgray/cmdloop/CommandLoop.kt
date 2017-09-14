@@ -1,16 +1,19 @@
 package io.zachgray.cmdloop
 
+import java.util.*
+
 class CommandLoop(
     private val commandPrefix:String,
     private val commandDictionary: CommandDictionary,
-    nonCommandInputHandler:((String?)->Unit)? = null,
-    welcomeMessage:String,
-    errorHandler:((Throwable)->Unit)?) {
+    private val nonCommandInputHandler:((String?)->Unit)? = null,
+    private val welcomeMessage:String,
+    private val errorHandler:((Throwable)->Unit)?) {
 
     private val commandList:List<String> = commandDictionary.keys.map { "$commandPrefix$it" }.sortedBy { it }
     val commandHistory = mutableListOf<String>()
+    private val commands = Stack<String?>()
 
-    init {
+    fun start():CommandLoop {
         println("$welcomeMessage Commands:")
         printCommands("  ")
 
@@ -18,7 +21,7 @@ class CommandLoop(
         repl@ while(true) {
             // get user input
             print("> ")
-            val input = readLine()
+            val input = if(!commands.isEmpty()) commands.pop() else readLine()
             // execute command
             try {
                 when(executeCommand(input)) {
@@ -30,9 +33,15 @@ class CommandLoop(
                 nonCommandInputHandler?.let { it(input) }
             } catch(t:Throwable) {
                 if (errorHandler == null) throw t
-                errorHandler(t)
+                errorHandler.invoke(t)
             }
         }
+        return this
+    }
+
+    fun run(input:String?):CommandLoop {
+        commands.push(input)
+        return this
     }
 
     /**

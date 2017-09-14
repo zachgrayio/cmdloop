@@ -57,5 +57,5 @@ fun main(args:Array<String>) {
                 println("  invalid expression, please try again.")
             }
         }
-    }
+    }.start()
 }
